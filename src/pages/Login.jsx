@@ -72,9 +72,7 @@ const Login = () => {
                   Login
                 </button>
               </form>
-              <Link to='/register'>
-                Don't have an account? Create an account
-              </Link>
+              <Link to='/register'>Belum punya akun? Buat akun</Link>
             </Col>
           </Row>
         </Container>
