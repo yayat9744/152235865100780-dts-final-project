@@ -6,7 +6,6 @@ import categoryImg01 from "../../../assets/images/category-01.png";
 import categoryImg02 from "../../../assets/images/category-02.png";
 import categoryImg03 from "../../../assets/images/category-03.png";
 import categoryImg04 from "../../../assets/images/category-04.png";
-import categoryImg05 from "../../../assets/images/category-05.png";
 
 import "../../../styles/category.css";
 
@@ -17,25 +16,20 @@ const categoryData = [
     category: "ALL",
   },
   {
-    display: "Minuman",
+    display: "Dish",
     imgUrl: categoryImg01,
-    category: "MINUMAN",
+    category: "DISH",
   },
   {
-    display: "Kopi",
+    display: "Souce",
     imgUrl: categoryImg02,
-    category: "KOPI",
+    category: "SAUCE",
   },
 
   {
-    display: "Makanan",
+    display: "Meat",
     imgUrl: categoryImg04,
-    category: "MAKANAN",
-  },
-  {
-    display: "Kue",
-    imgUrl: categoryImg05,
-    category: "KUE",
+    category: "MEAT",
   },
 ];
 
@@ -44,7 +38,7 @@ const Category = ({ setCategory, category }) => {
     <Container>
       <Row>
         {categoryData.map((item, index) => (
-          <Col className='mb-4' key={index}>
+          <Col lg='3' md='4' sm='6' xs='6' className='mb-4' key={index}>
             <div
               className={`category__item d-flex align-items-center gap-3  ${
                 category === item.category ? "category__item__active" : ""

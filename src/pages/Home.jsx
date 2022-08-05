@@ -6,51 +6,127 @@ import "../styles/hero-section.css";
 import { Link } from "react-router-dom";
 import Category from "../components/UI/category/Category.jsx";
 import "../styles/home.css";
-import products from "../assets/fake-data/products.js";
+// import products from "../assets/fake-data/products.js";
 import ProductCard from "../components/UI/product-card/ProductCard.jsx";
 import whyImg from "../assets/images/location.png";
+import Axios from "axios";
 const Home = () => {
   const [category, setCategory] = useState("ALL");
-  const [allProducts, setAllProducts] = useState(products);
+  const [allProducts, setAllProducts] = useState();
   const [searchTerm, setSearchTerm] = useState("");
-
+  const header = {
+    "X-RapidAPI-Key": "7fb33e563bmsh1c60e44e446f3abp1f4543jsn0a02c1509c42",
+    "X-RapidAPI-Host": "tao-foods.p.rapidapi.com",
+  };
+  const url = "https://tao-foods.p.rapidapi.com/";
+  // const options = {
+  //   method: "GET",
+  //   url: "https://pizza-and-desserts.p.rapidapi.com/desserts",
+  //   headers: {
+  //     "X-RapidAPI-Key": "7fb33e563bmsh1c60e44e446f3abp1f4543jsn0a02c1509c42",
+  //     "X-RapidAPI-Host": "pizza-and-desserts.p.rapidapi.com",
+  //   },
+  // };
   useEffect(() => {
     if (category === "ALL") {
-      setAllProducts(products);
+      init();
     }
 
-    if (category === "MINUMAN") {
-      const filteredProducts = products.filter(
-        (item) => item.category === "Minuman"
-      );
-
-      setAllProducts(filteredProducts);
+    if (category === "DISH") {
+      getDishes();
     }
 
-    if (category === "KOPI") {
-      const filteredProducts = products.filter(
-        (item) => item.category === "Kopi"
-      );
-
-      setAllProducts(filteredProducts);
+    if (category === "SAUCE") {
+      getSouce();
     }
 
-    if (category === "MAKANAN") {
-      const filteredProducts = products.filter(
-        (item) => item.category === "Makanan"
-      );
-
-      setAllProducts(filteredProducts);
+    if (category === "MEAT") {
+      getMeat();
     }
-    if (category === "KUE") {
-      const filteredProducts = products.filter(
-        (item) => item.category === "Kue"
-      );
-
-      setAllProducts(filteredProducts);
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category]);
+  // console.log("aaaaaaaa", allProducts);
+  // useEffect(() => {
+    // console.log("aaaa");
+    // init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+  const init = async () => {
+    try {
+      let dataDishes = await Axios({
+        method: "get",
+        url: url + "dishes/",
+        params: { id: '6tyfjkgut7jgf9kdh3n' },
+        headers: header,
+      });
+      let dataMeat = await Axios({
+        method: "get",
+        url: url + "meat",
+        headers: header,
+      });
+      let dataSauce = await Axios({
+        method: "get",
+        url: url + "sauce",
+        headers: header,
+      });
 
+      setAllProducts([...dataDishes.data, ...dataMeat.data, ...dataSauce.data]);
+    } catch (error) {
+      // OpsError(error);
+      console.log(error);
+    } finally {
+      
+    }
+  }
+  const getDishes = async () => {
+    try {
+      let dataDishes = await Axios({
+        method: "get",
+        url: url + "dishes/",
+        params:{id: '6tyfjkgut7jgf9kdh3n'},
+        headers:header,
+      });
+
+      setAllProducts(dataDishes.data);
+    } catch (error) {
+      // OpsError(error);
+      console.log(error);
+    } finally {
+      // setLoading(false);
+    }
+  };
+  const getMeat = async () => {
+    try {
+      let dataMeat = await Axios({
+        method: "get",
+        url: url + "meat",
+        headers:header,
+      });
+
+      setAllProducts(dataMeat.data);
+    } catch (error) {
+      // OpsError(error);
+      console.log(error);
+    } finally {
+      // setLoading(false);
+    }
+  };
+  const getSouce = async () => {
+    try {
+      let dataSouce = await Axios({
+        method: "get",
+        url: url + "sauce",
+        headers:header,
+      });
+
+      setAllProducts(dataSouce.data);
+    } catch (error) {
+      // OpsError(error);
+      console.log(error);
+    } finally {
+      // setLoading(false);
+    }
+  };
   return (
     <Helmet title='Home'>
       <section>
@@ -65,8 +141,8 @@ const Home = () => {
                 </h1>
 
                 <p>
-                  Ketika lapar segera pesan makanan di majalengka food
-                  delivery maka makanan akan kami antar sampai rumah
+                  Ketika lapar segera pesan makanan di majalengka food delivery
+                  maka makanan akan kami antar sampai rumah
                 </p>
 
                 <div className='hero__btns d-flex align-items-center gap-5 mt-4'>
@@ -119,12 +195,12 @@ const Home = () => {
                 depan rumah!
               </p>
             </Col>
-              <Category setCategory={setCategory} category={category} />
+            <Category setCategory={setCategory} category={category} />
             <Col lg='6' md='6' sm='6' xs='12'>
               <div className='search__widget d-flex align-items-center justify-content-between '>
                 <input
                   type='text'
-                  placeholder="cari...."
+                  placeholder='cari....'
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -144,7 +220,8 @@ const Home = () => {
                 </select>
               </div>
             </Col>
-            {allProducts.map((item) => (
+            {allProducts===undefined?null:
+            allProducts.map((item) => (
               <Col lg='3' md='4' sm='6' xs='6' key={item.id} className='mt-4'>
                 <ProductCard item={item} />
               </Col>
@@ -166,26 +243,31 @@ const Home = () => {
                   Mengapa <span>Pesan makanan disini?</span>
                 </h2>
                 <p className='tasty__treat-desc'>
-                  Banyak pilihan makanan dan minuman yang tersedia disini mulai dari makanan ringan, makanan berat kopi, snak, kue. Anda
-                  tinggal memilih makanan dan minuman yang disukai maka kami akan siap antarkan sampai ke rumah.
+                  Banyak pilihan makanan dan minuman yang tersedia disini mulai
+                  dari makanan ringan, makanan berat kopi, snak, kue. Anda
+                  tinggal memilih makanan dan minuman yang disukai maka kami
+                  akan siap antarkan sampai ke rumah.
                 </p>
 
                 <ListGroup className='mt-4'>
                   <ListGroupItem className='border-0 ps-0'>
                     <p className=' choose__us-title d-flex align-items-center gap-2 '>
-                      <i className='ri-checkbox-circle-line'></i> Makanan enak dan segar
+                      <i className='ri-checkbox-circle-line'></i> Makanan enak
+                      dan segar
                     </p>
                   </ListGroupItem>
 
                   <ListGroupItem className='border-0 ps-0'>
                     <p className='choose__us-title d-flex align-items-center gap-2 '>
-                      <i className='ri-checkbox-circle-line'></i> Admin siap melayani
+                      <i className='ri-checkbox-circle-line'></i> Admin siap
+                      melayani
                     </p>
                   </ListGroupItem>
 
                   <ListGroupItem className='border-0 ps-0'>
                     <p className='choose__us-title d-flex align-items-center gap-2 '>
-                      <i className='ri-checkbox-circle-line'></i>Pesan dari lokasi manapun
+                      <i className='ri-checkbox-circle-line'></i>Pesan dari
+                      lokasi manapun
                     </p>
                   </ListGroupItem>
                 </ListGroup>
@@ -194,7 +276,6 @@ const Home = () => {
           </Row>
         </Container>
       </section>
-
     </Helmet>
   );
 };

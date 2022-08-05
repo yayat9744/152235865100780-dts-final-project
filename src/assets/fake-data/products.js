@@ -94,7 +94,7 @@ const products = [
     desc: "Alpukat Kocok.",
   },
   {
-    id: "06",
+    id: "07",
     title: "Juice Strawbery",
     price: 200000,
     image01: drink_02,
